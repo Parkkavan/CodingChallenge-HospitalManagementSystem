@@ -1,6 +1,8 @@
 package com.controller;
 
 import java.sql.SQLException;
+import java.time.LocalDate;
+import java.time.format.DateTimeFormatter;
 import java.util.List;
 import java.util.Scanner;
 
@@ -37,7 +39,9 @@ public class HospitalController {
 					int aId=sc.nextInt();
 					try {
 						Appointment appointment = hospitalService.getAppointmentById(aId);
-						System.out.println(appointment);
+						System.out.println("Appointment By appointment Id: "+aId);
+						System.out.println("appointment_id "+" patient_id "+" doctor_id "+" appointment_date "+" description ");
+						System.out.println("\t"+appointment.getAppointmentId()+"\t     "+appointment.getPatientId()+"\t\t"+appointment.getDoctorId()+"\t"+appointment.getAppointmentDate()+"\t"+appointment.getDescription());
 						System.out.println();
 					} catch (SQLException | AppointmentIdException e) {
 						System.out.println(e.getMessage());
@@ -48,10 +52,11 @@ public class HospitalController {
 					int pId=sc.nextInt();
 					try {
 						List<Appointment> list = hospitalService.getAppointmentsForPatients(pId);
-						
-						for(Appointment a:list)
+						System.out.println("Appointments for Patient "+pId);
+						System.out.println("appointment_id "+" patient_id "+" doctor_id "+" appointment_date "+" description ");
+						for(Appointment appointment:list)
 						{
-							System.out.println(a);
+							System.out.println("\t"+appointment.getAppointmentId()+"\t     "+appointment.getPatientId()+"\t\t"+appointment.getDoctorId()+"\t"+appointment.getAppointmentDate()+"\t"+appointment.getDescription());
 						}
 						System.out.println();
 					} catch (SQLException | PatientNumberNotFoundException e) {
@@ -63,19 +68,63 @@ public class HospitalController {
 					int dId=sc.nextInt();
 					try {
 						List<Appointment> list = hospitalService.getAppointmentsForDoctors(dId);
-						for (Appointment a : list) {
-							System.out.println(a);
+						System.out.println("Appointments for Doctor "+dId);
+						System.out.println("appointment_id "+" patient_id "+" doctor_id "+" appointment_date "+" description ");
+						for(Appointment appointment:list)
+						{
+							System.out.println("\t"+appointment.getAppointmentId()+"\t     "+appointment.getPatientId()+"\t\t"+appointment.getDoctorId()+"\t"+appointment.getAppointmentDate()+"\t"+appointment.getDescription());
 						}
 						System.out.println();
 					} catch (SQLException | DoctorIdException e) {
 						System.out.println(e.getMessage());
 					}
 					break;
+					
+				case 4:
+					System.out.println("Enter the patient Id");
+					pId=sc.nextInt();
+					System.out.println("Enter the doctor Id");
+					dId=sc.nextInt();
+					System.out.println("Enter the appointment date");
+					String date=sc.next();
+					DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyyy-MM-dd");
+			        LocalDate appointmentDate=LocalDate.parse(date, formatter);
+			        System.out.println("Enter the description");
+			        sc.nextLine();
+					String description=sc.nextLine();
+					boolean result;
+					try {
+						result = hospitalService.scheduleAppointment(pId, dId, appointmentDate, description);
+						if(result)
+						{
+							System.out.println("Appointment made successfully");
+						}
+					} catch (SQLException e1) {
+						System.out.println(e1.getMessage());
+					}
+					break;
+				case 5:
+					System.out.println("Enter the appointment Id");
+					aId=sc.nextInt();
+					System.out.println("Enter the updated date");
+					date=sc.next();
+					formatter = DateTimeFormatter.ofPattern("yyyy-MM-dd");
+			        appointmentDate=LocalDate.parse(date, formatter);
+					try {
+						result = hospitalService.updateAppointment(aId, appointmentDate);
+						if(result)
+						{
+							System.out.println("Appointment updated successfully");
+						}
+					} catch (SQLException e1) {
+						System.out.println(e1.getMessage());
+					}
+			        break;		
 				case 6:
 					System.out.println("Enter the appointment Id");
 					aId=sc.nextInt();
 					try {
-						boolean result = hospitalService.cancelAppointment(aId);
+						result = hospitalService.cancelAppointment(aId);
 						if(result)
 						{
 							System.out.println("Appointment cancelled successfully");

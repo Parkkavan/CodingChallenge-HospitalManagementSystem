@@ -1,6 +1,7 @@
 package com.service;
 
 import java.sql.SQLException;
+import java.time.LocalDate;
 import java.util.List;
 
 import com.dao.IHospitalDao;
@@ -25,6 +26,12 @@ public class HospitalService {
 	}
 	public boolean cancelAppointment(int aId) throws SQLException {
 		return iHospitalDao.cancelAppointment(aId);
+	}
+	public boolean scheduleAppointment(int pId, int dId, LocalDate appointmentDate, String description) throws SQLException {
+		return iHospitalDao.scheduleAppointment(pId,dId,appointmentDate,description);
+	}
+	public boolean updateAppointment(int aId, LocalDate appointmentDate) throws SQLException {
+		return iHospitalDao.updateAppointment(aId,appointmentDate);
 	}
 
 }

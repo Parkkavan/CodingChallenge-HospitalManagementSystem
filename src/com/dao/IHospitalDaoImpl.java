@@ -103,7 +103,45 @@ public class IHospitalDaoImpl implements IHospitalDao{
 
 	}
 	
+	@Override
+	public boolean scheduleAppointment(int pId, int dId, LocalDate appointmentDate, String description) throws SQLException {
+		Connection conn=DBUtil.getDBConn();
+		String sql="insert into appointment(patient_id,doctor_id,appointment_date,description) values (?,?,?,?)";
+		
+		PreparedStatement pstmt=conn.prepareStatement(sql);
+		
+		pstmt.setInt(1, pId);
+		pstmt.setInt(2, dId);
+		pstmt.setObject(3, appointmentDate);
+		pstmt.setString(4, description);
+		
+		int res=pstmt.executeUpdate();
+		DBUtil.dbClose();
+		if(res==1)
+		{
+			return true;
+		}
+		return false;
+	}
 	
+	@Override
+	public boolean updateAppointment(int aId, LocalDate appointmentDate) throws SQLException {
+		Connection conn=DBUtil.getDBConn();
+		String sql="update appointment set appointment_date=? where appointment_id=?";
+		
+		PreparedStatement pstmt=conn.prepareStatement(sql);
+		
+		pstmt.setObject(1,appointmentDate);
+		pstmt.setInt(2, aId);
+		
+		int res=pstmt.executeUpdate();
+		DBUtil.dbClose();
+		if(res==1)
+		{
+			return true;
+		}
+		return false;
+	}
 	
 	public boolean cancelAppointment(int aId) throws SQLException {
 		Connection conn=DBUtil.getDBConn();
@@ -121,5 +159,6 @@ public class IHospitalDaoImpl implements IHospitalDao{
 		}
 		return false;
 	}
+	
 	
 }

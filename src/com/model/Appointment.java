@@ -1,6 +1,7 @@
 package com.model;
 
 import java.time.LocalDate;
+import java.util.Objects;
 
 public class Appointment {
 
@@ -74,6 +75,27 @@ public class Appointment {
 		return "Appointment [appointmentId=" + appointmentId + ", patientId=" + patientId + ", doctorId=" + doctorId
 				+ ", appointmentDate=" + appointmentDate + ", description=" + description + "]";
 	}
+
+	@Override
+	public int hashCode() {
+		return Objects.hash(appointmentDate, appointmentId, description, doctorId, patientId);
+	}
+
+	@Override
+	public boolean equals(Object obj) {
+		if (this == obj)
+			return true;
+		if (obj == null)
+			return false;
+		if (getClass() != obj.getClass())
+			return false;
+		Appointment other = (Appointment) obj;
+		return Objects.equals(appointmentDate, other.appointmentDate) && appointmentId == other.appointmentId
+				&& Objects.equals(description, other.description) && doctorId == other.doctorId
+				&& patientId == other.patientId;
+	}
+	
+	
 	
 	
 	

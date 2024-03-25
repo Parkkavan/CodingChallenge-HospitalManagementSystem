@@ -14,6 +14,7 @@ import com.model.Appointment;
 public class HospitalService {
 
 	IHospitalDao iHospitalDao=new IHospitalDaoImpl(); // polymorphic object
+	
 	public Appointment getAppointmentById(int aId) throws SQLException, AppointmentIdException {
 		return iHospitalDao.getAppointmentById(aId);
 	}
